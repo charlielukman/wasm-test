@@ -1,0 +1,62 @@
+
+<html>  
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+      body {
+        background-color: gray;
+      }
+      .image {
+        display: block;
+        max-height: 25rem;
+        width: 49%;
+        float: left;
+        margin-right: 2px;
+      }
+      .text-result{
+        width: 300px;
+        height: 80px;
+        max-width: 300px;
+        display: inline-block;
+        font-size: 1%;
+        color:white;
+      }
+    </style>
+    <script src="wasm_exec.js"></script>
+    <script>
+      const go = new Go();
+      let mod, inst;
+      WebAssembly.instantiateStreaming(
+        fetch("ascii_pic.wasm"), go.importObject).then(
+        async result => {
+          mod = result.module;
+          inst = result.instance;
+          await go.run(inst);
+        }        
+      )
+
+      function processImage(input) {
+        if (input.files && input.files[0]) {
+          let reader = new FileReader();
+          imageType = input.files[0].type;
+			    reader.readAsArrayBuffer(input.files[0]);
+
+          reader.onload = (e) => {
+            bytes = new Uint8Array(e.target.result);
+            let blob = new Blob([bytes], {'type': imageType});
+            document.getElementById('sourceImg')
+              .setAttribute('src', URL.createObjectURL(blob));
+            
+            loadImage(bytes);            
+          };
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <input type="file" id="uploader" onchange="processImage(this);" /> 
+    <div></div>   
+    <image id="sourceImg" class="image" />
+    <pre id="result" class="text-result"></pre>
+  </body>
+</html> 
