@@ -10,4 +10,4 @@ make build
 ```
 
 ## Running Demo
-Demo is live on https://mystifying-saha-8b9bdc.netlify.app/
+Demo is live on https://wasm-test.netlify.app/
