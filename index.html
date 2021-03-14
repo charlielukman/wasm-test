@@ -47,7 +47,9 @@
             document.getElementById('sourceImg')
               .setAttribute('src', URL.createObjectURL(blob));
             
-            loadImage(bytes);            
+            const ascii = createAsciiImage(bytes);
+            document.getElementById("result")
+              .innerHTML = ascii;
           };
         }
       }

@@ -9,7 +9,7 @@ import (
 	"github.com/qeesung/image2ascii/convert"
 )
 
-func loadImage(this js.Value, args []js.Value) interface{} {
+func createAsciiImage(this js.Value, args []js.Value) interface{} {
 	arr := args[0]
 	buf := make([]uint8, arr.Get("byteLength").Int())
 
@@ -24,31 +24,25 @@ func loadImage(this js.Value, args []js.Value) interface{} {
 		return nil
 	}
 
-	createAsciiImage(sourceImage)
-
-	return nil
+	return getConvertedAscii(sourceImage)
 }
 
-func createAsciiImage(img image.Image) {
+func getConvertedAscii(img image.Image) string {
 	convertOptions := convert.DefaultOptions
 	convertOptions.FixedWidth = 180
 	convertOptions.FixedHeight = 60
 	convertOptions.Colored = false
 
 	converter := convert.NewImageConverter()
-	result := converter.Image2ASCIIString(img, &convertOptions)
-	js.Global().Get("document").
-		Call("getElementById", "result").
-		Set("innerHTML", result)
-
+	return converter.Image2ASCIIString(img, &convertOptions)
 }
 
 func registerCallbacks() {
-	js.Global().Set("loadImage", js.FuncOf(loadImage))
+	js.Global().Set("createAsciiImage", js.FuncOf(createAsciiImage))
 }
 
 func main() {
-	c := make(chan struct{}, 0)
+	c := make(chan bool, 0)
 
 	println("WASM GO Initialized")
 
