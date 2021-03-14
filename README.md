@@ -10,4 +10,4 @@ make build
 ```
 
 ## Running Demo
-Demo is live on https://wasm-test.netlify.app/
+Demo is live on https://wasm-imageascii-demo.netlify.app/
